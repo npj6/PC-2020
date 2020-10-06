@@ -7,41 +7,47 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define NUM_HILOS 5
+#define NUM_HILOS 3
 
-int I = 0;
+typedef struct {
+  int n;
+  char c;
+} input_t;
 
-void *codigo_del_hilo (void *id) {
+void *codigo_del_hilo (void *input) {
   int i;
-  for (i=0; i<50; i++) {
-    printf("Hilo %d: i = %d\n", *(int *)id, I++);
+  for (i=0; i<((input_t *)input)->n; i++) {
+    printf("%c", ((input_t *)input)->c);
   }
-  pthread_exit(id);
+  pthread_exit(NULL);
+}
+
+void error(int error) {
+  if (error) {
+    fprintf (stderr, "Error: %d: %s\n", error, strerror(error));
+    exit(-1);
+  }
 }
 
 int main() {
   int h;
   pthread_t hilos[NUM_HILOS];
-  int id[NUM_HILOS] = {1, 2, 3, 4, 5};
-  int error;
+  input_t inputs[NUM_HILOS];
   int *salida;
   
-  for(h=0; h<NUM_HILOS; h++) {
-    error = pthread_create(&hilos[h], NULL, codigo_del_hilo, &id[h]);
-    if (error) {
-      fprintf (stderr, "Error: %d: %s\n", error, strerror(error));
-      exit(-1);
-    }
-  }
+  inputs[0].n = 50; inputs[0].c = 'A';
+  error(pthread_create(&hilos[0], NULL, codigo_del_hilo, &inputs[0]));
+
+  inputs[1].n = 100; inputs[1].c = 'B';
+  error(pthread_create(&hilos[1], NULL, codigo_del_hilo, &inputs[1]));
+
+  inputs[2].n = 150; inputs[2].c = 'C';
+  error(pthread_create(&hilos[2], NULL, codigo_del_hilo, &inputs[2]));
 
 
   for(h=0; h<NUM_HILOS; h++) {
-    error = pthread_join(hilos[h], (void **)&salida);
-    if (error) {
-      fprintf(stderr, "Error: %d: %s\n", error, strerror(error));
-    } else {
-      printf("Hilo %d terminado\n", *salida);
-    }
+    error(pthread_join(hilos[h], (void **)&salida));
   }
 
+  return 0;
 }
