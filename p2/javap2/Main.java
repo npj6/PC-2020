@@ -9,7 +9,7 @@ public class Main {
   }
   
 
-  private class Hilo extends Thread {
+  private static class Hilo extends Thread {
     private String text;
 
     public Hilo(String text) { this.text = text; }
@@ -17,7 +17,7 @@ public class Main {
     public void run() { Main.print(text); }
   }
 
-  private class Ejecutable implements Runnable {
+  private static class Ejecutable implements Runnable {
     private String text;
 
     public Ejecutable(String text) { this.text = text; }
@@ -26,9 +26,17 @@ public class Main {
   }
 
   public static void main(String[] args) {
-    Thread hilo = new Hilo("Soy el hilo.");
-    Thread ejec = new Thread(new Ejecutable("Soy el ejecutable."));
+    Thread thread1, thread2;
 
-    System.out.println("Hewwo :3c");
+    if(args.length < 1 || args[0].equals("-h")) {
+      thread1 = new Hilo("hilo1");
+      thread2 = new Hilo("hilo2");
+    } else {
+      thread1 = new Thread(new Ejecutable("ejec1"));
+      thread2 = new Thread(new Ejecutable("ejec2"));
+    }
+    thread1.setPriority(1);
+    thread1.start();
+    thread2.start();
   }
 }
