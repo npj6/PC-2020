@@ -16,17 +16,17 @@ def entry_critical_section(i):
 def critical_section(i):
   global counter
   counter += 1
+  print("Counter = "+str(counter))
 
 def exit_critical_section(i):
   global states
   states[i] = False
 
 def thread(i):
-  for j in range(MAX_COUNT//THREADS):
-    entry_critical_section(i)
-    critical_section(i)
-    exit_critical_section(i)
-
+    for j in range(MAX_COUNT//THREADS):
+      entry_critical_section(i)
+      critical_section(i)
+      exit_critical_section(i)
 def main():
   threads = []
   for i in range(THREADS):
@@ -37,7 +37,11 @@ def main():
 
   # Wait for all threads to complete
   for t in threads:
-    t.join()
+    try:
+      t.join()
+    except KeyboardInterrupt:
+      pass
+
 
   print("Counter value: {} Expected: {}\n".format(counter, MAX_COUNT))
 
