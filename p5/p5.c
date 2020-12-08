@@ -10,14 +10,14 @@
 
 
 // numero lectores
-int LEC_NUM = 3; //10
+int LEC_NUM = 10;
 // numero escritores
-int ESC_NUM = 3; //5
+int ESC_NUM = 5;
 
 // veces que leen los lectores
-int LEC_VECES = 2; //10
+int LEC_VECES = 10;
 // veces que escriben los escritores
-int ESC_VECES = 2; //5
+int ESC_VECES = 5;
 
 pthread_mutex_t mx = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t writer = PTHREAD_MUTEX_INITIALIZER;
